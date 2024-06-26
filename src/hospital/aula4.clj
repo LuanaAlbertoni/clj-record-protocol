@@ -36,5 +36,66 @@
   (pprint (deve-assinar-pre-autorizacao? plano, :raio-x, 500)))
 
 
+;quem define qual sera a estrategia.
 (defmulti deve-assinar-pre-autorizacao-multi? class)
-(defmethod deve-assinar-pre-autorizacao-multi? PacienteParticular [paciente] )
+;invoca a funcao
+(defmethod deve-assinar-pre-autorizacao-multi? PacienteParticular [paciente] false)
+(defmethod deve-assinar-pre-autorizacao-multi? PacientePlanoDeSaude [paciente] false)
+
+
+
+
+(let [particular (->PacienteParticular 15 "Luana" "15/02/1996", :normal)
+      plano (->PacientePlanoDeSaude 15 "Luana" "15/02/1996", :normal, [:raio-x, :ultrasom])]
+  (pprint (deve-assinar-pre-autorizacao-multi? particular))
+  (pprint (deve-assinar-pre-autorizacao-multi? plano)))
+
+
+;pedido (:paciente paciente, :valor valor, :procedimento procedimentp}
+
+
+;como funciona a funcao que define a estrategia de um defmulti
+(defn minha-funcao [p]
+  (println p)
+  (class p))
+
+(defmulti multi-teste minha-funcao)
+
+;(multi-teste :luana)
+
+
+(defn tipo-do-autorizador [pedido]
+  (let [paciente (:paciente pedido)
+        situacao (:situacao paciente)
+        urgencia? (= :urgente situacao)]
+    (if urgencia?
+      :sempre-autorizado
+      (class paciente))))
+
+(defmulti deve-assinar-pre-autorizacao-do-pedido? tipo-do-autorizador)
+
+(defmethod deve-assinar-pre-autorizacao-do-pedido? :sempre-autorizado [pedido] false)
+(defmethod deve-assinar-pre-autorizacao-do-pedido? PacienteParticular [pedido] (>= (:valor pedido 0) 50))
+(defmethod deve-assinar-pre-autorizacao-do-pedido? PacientePlanoDeSaude [pedido] (not (some #(= % (:procedimento pedido)) (:plano (:paciente pedido)))))
+
+
+
+(let [particular (->PacienteParticular 15 "Luana" "15/02/1996", :urgente)
+      plano (->PacientePlanoDeSaude 15 "Luana" "15/02/1996", :urgente, [:raio-x, :ultrasom])]
+  (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente particular, :valor 1000, :procedimento :raio-x}))
+  (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente plano, :valor 1000, :procedimento :raio-x})))
+
+
+(let [particular (->PacienteParticular 15 "Luana" "15/02/1996", :normal)
+      plano (->PacientePlanoDeSaude 15 "Luana" "15/02/1996", :normal, [:raio-x, :ultrasom])]
+  (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente particular, :valor 1000, :procedimento :raio-x}))
+  (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente plano, :valor 1000, :procedimento :coleta-de-sangue})))
+
+
+
+
+
+
+
+
+
