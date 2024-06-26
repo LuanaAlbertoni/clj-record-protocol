@@ -86,11 +86,11 @@
   (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente plano, :valor 1000, :procedimento :raio-x})))
 
 
+
 (let [particular (->PacienteParticular 15 "Luana" "15/02/1996", :normal)
       plano (->PacientePlanoDeSaude 15 "Luana" "15/02/1996", :normal, [:raio-x, :ultrasom])]
   (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente particular, :valor 1000, :procedimento :raio-x}))
   (pprint (deve-assinar-pre-autorizacao-do-pedido? {:paciente plano, :valor 1000, :procedimento :coleta-de-sangue})))
-
 
 
 
