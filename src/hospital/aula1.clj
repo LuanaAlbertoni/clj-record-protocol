@@ -1,7 +1,7 @@
 (ns hospital.aula1
   (:use clojure.pprint))
 
-
+(def test 123)
 (defn adiciona-paciente
   "Os Pacientes sao um mapa na forma {15 {paciente 15}, 23 {paciente 23}}
     O paciente eh {:id 15 ......}"
