@@ -4,6 +4,7 @@
             [hospital.logic :as h.logic]))
 
 (def test "test")
+(def test2 "test")
 
 (defn carrega-paciente [id]
   (println "carregando" id)
