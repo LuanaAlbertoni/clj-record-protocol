@@ -3,6 +3,7 @@
   (:require [hospital.model :as h.model]
             [hospital.logic :as h.logic]))
 
+(def test "test")
 
 (defn carrega-paciente [id]
   (println "carregando" id)
